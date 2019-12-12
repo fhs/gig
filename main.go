@@ -208,13 +208,22 @@ func lineDiff(w io.Writer, a, b string) {
 }
 
 func gitInit(args []string) error {
-	if len(args) < 1 {
-		return fmt.Errorf("usage: gig init <name>")
+	if len(args) > 1 {
+		return fmt.Errorf("usage: gig init [directory]")
 	}
-	fs := osfs.New(filepath.Join(args[0], ".git"))
+	dir := "."
+	if len(args) > 0 {
+		dir = args[0]
+	}
+	dotgit := filepath.Join(dir, ".git")
+	fs := osfs.New(dotgit)
 	s := filesystem.NewStorage(fs, nil)
 	_, err := git.Init(s, nil)
-	return err
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Initialized empty Git repository in %v\n", dotgit)
+	return nil
 }
 
 func gitLog(args []string) error {
