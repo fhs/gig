@@ -10,7 +10,3 @@ require (
 	gopkg.in/src-d/go-billy.v4 v4.3.2
 	gopkg.in/src-d/go-git.v4 v4.13.1
 )
-
-replace gopkg.in/src-d/go-billy.v4 => /home/fhs/go/src/gopkg.in/src-d/go-billy
-
-replace gopkg.in/src-d/go-git.v4 => /home/fhs/go/src/gopkg.in/src-d/go-git
