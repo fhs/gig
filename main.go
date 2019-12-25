@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -155,6 +154,10 @@ func gitDiff(args []string) error {
 	}
 	ref, err := r.Head()
 	if err != nil {
+		if err.Error() == "reference not found" {
+			// No diff if there is no commits yet.
+			return nil
+		}
 		return err
 	}
 	h := ref.Hash()
@@ -336,6 +339,7 @@ func main() {
 	flag.Parse()
 
 	if err := run(flag.Args()); err != nil {
-		log.Fatalln(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 }
