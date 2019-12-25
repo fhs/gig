@@ -1,3 +1,4 @@
+// Program gig attempts to mimic the git command.
 package main
 
 import (
