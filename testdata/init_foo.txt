@@ -1,0 +1,12 @@
+gig init foo
+stdout 'Initialized empty Git repository in foo/.git'
+
+cd foo
+gig status
+
+! gig log
+stderr 'reference not found'
+
+gig diff
+
+gig branch

@@ -1,0 +1,39 @@
+gig init
+stdout 'Initialized empty Git repository in .git'
+
+gig status
+stdout '\?\? hello.txt'
+stdout '\?\? file1.txt'
+
+gig add hello.txt
+
+gig status
+stdout 'A  hello.txt'
+stdout '\?\? file1.txt'
+
+gig commit -m 'Initial commit'
+
+gig log
+stdout '^commit .*'
+stdout '^Author: .*'
+stdout '^Date: .*'
+stdout 'Initial commit'
+
+gig branch
+stdout ' refs/heads/master$'
+
+gig add file1.txt
+gig commit -m 'Add file1'
+gig show
+stdout 'Add file1'
+stdout '^\+line one$'
+stdout '^\+line two$'
+stdout '^\+line three$'
+
+-- hello.txt --
+hello world
+こんにちは世界
+-- file1.txt --
+line one
+line two
+line three
