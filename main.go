@@ -18,6 +18,7 @@ import (
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/cache"
 	"gopkg.in/src-d/go-git.v4/plumbing/object"
+	"gopkg.in/src-d/go-git.v4/plumbing/transport/file"
 	"gopkg.in/src-d/go-git.v4/storage/filesystem"
 )
 
@@ -41,6 +42,20 @@ func findRepoRoot() (string, error) {
 		p = newp
 	}
 	return "", fmt.Errorf("fatal: not a git repository")
+}
+
+// dotGitDir returns the .git directory within dir.
+// If there is no .git directory within dir, it returns dir.
+func dotGitDir(dir string) string {
+	if filepath.Base(dir) == ".git" {
+		return dir
+	}
+	dot := filepath.Join(dir, ".git")
+	fi, err := os.Stat(dot)
+	if err == nil && fi.IsDir() {
+		return dot
+	}
+	return dir
 }
 
 func openRepo() (string, *git.Repository, error) {
@@ -252,6 +267,13 @@ func gitLog(args []string) error {
 	})
 }
 
+func gitReceivePack(args []string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("usage: receive-pack <dir>")
+	}
+	return file.ServeReceivePack(dotGitDir(args[0]))
+}
+
 func gitShow(args []string) error {
 	// TODO: support hash sub-string prefix
 	// TODO: initial commit patch
@@ -305,6 +327,13 @@ func gitStatus(args []string) error {
 	return nil
 }
 
+func gitUploadPack(args []string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("usage: upload-pack <dir>")
+	}
+	return file.ServeUploadPack(dotGitDir(args[0]))
+}
+
 func run(args []string) error {
 	if len(args) < 1 {
 		return fmt.Errorf("no command given")
@@ -327,10 +356,14 @@ func run(args []string) error {
 		return gitInit(args)
 	case "log":
 		return gitLog(args)
+	case "receive-pack":
+		return gitReceivePack(args)
 	case "show":
 		return gitShow(args)
 	case "status":
 		return gitStatus(args)
+	case "upload-pack":
+		return gitUploadPack(args)
 	}
 	return fmt.Errorf("unknown command %q", cmd)
 }
