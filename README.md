@@ -1,13 +1,11 @@
 # gig
 
-Gig is an attempt at implementing a git-compatible command in pure Go (using [go-git](https://github.com/src-d/go-git)).
+Gig is an attempt at implementing a git-compatible command in pure Go
+(using [go-git](https://github.com/go-git/go-git)).
 
 ## Why?
 
 This is intended for Plan 9, where git doesn’t work natively.
-Gig requires these two PRs on Plan 9:
-* https://github.com/src-d/go-billy/pull/78
-* https://github.com/src-d/go-git/pull/1269
 
 ## See also
 * https://github.com/oridb/git9
