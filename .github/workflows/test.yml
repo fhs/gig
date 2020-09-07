@@ -28,13 +28,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v1
 
+    - name: Run tests
+      run: |
+        go test -race -v ./...
+      shell: bash
+
     - name: Check gofmt
       run: |
         gofmt -l .
         test `gofmt -l . | wc -l` = 0
-      shell: bash
-
-    - name: Run tests
-      run: |
-        go test -race -v ./...
       shell: bash
