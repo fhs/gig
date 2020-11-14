@@ -1,0 +1,26 @@
+gig init
+stdout 'Initialized empty Git repository in .git'
+
+! gig checkout -b awesome
+stderr 'reference not found'
+
+gig add hello.txt
+gig commit -m 'Initial commit'
+
+! gig checkout awesome
+stderr 'reference not found'
+
+gig branch awesome
+gig branch
+stdout '^\* .* refs/heads/master'
+
+gig checkout awesome
+gig branch
+stdout '^\* .* refs/heads/awesome'
+
+gig checkout -b plan9
+gig branch
+stdout '^\* .* refs/heads/plan9'
+
+-- hello.txt --
+hello world
