@@ -17,10 +17,11 @@ var message string
 
 // commitCmd represents the commit command
 var commitCmd = &cobra.Command{
-	Use:   "commit",
-	Short: "Record changes to the repository",
-	Long:  ``,
-	RunE:  gitCommit,
+	Use:     "commit",
+	Aliases: []string{"ci"},
+	Short:   "Record changes to the repository",
+	Long:    ``,
+	RunE:    gitCommit,
 }
 
 func gitCommit(_ *cobra.Command, args []string) error {

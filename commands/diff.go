@@ -20,10 +20,11 @@ import (
 
 // diffCmd represents the diff command
 var diffCmd = &cobra.Command{
-	Use:   "diff",
-	Short: "Show changes between commits",
-	Long:  ``,
-	RunE:  gitDiff,
+	Use:     "diff",
+	Aliases: []string{"di"},
+	Short:   "Show changes between commits",
+	Long:    ``,
+	RunE:    gitDiff,
 }
 
 func gitDiff(_ *cobra.Command, args []string) error {

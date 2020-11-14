@@ -12,10 +12,11 @@ import (
 
 // statusCmd represents the status command
 var statusCmd = &cobra.Command{
-	Use:   "status",
-	Short: "Show the working tree status",
-	Long:  ``,
-	RunE:  gitStatus,
+	Use:     "status",
+	Aliases: []string{"st"},
+	Short:   "Show the working tree status",
+	Long:    ``,
+	RunE:    gitStatus,
 }
 
 func gitStatus(_ *cobra.Command, args []string) error {

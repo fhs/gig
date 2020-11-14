@@ -67,8 +67,9 @@ func init() {
 	var bc branchCmd
 
 	cmd := &cobra.Command{
-		Use:   "branch [name]",
-		Short: "List, create, or delete branches",
+		Use:     "branch [name]",
+		Aliases: []string{"br"},
+		Short:   "List, create, or delete branches",
 		Long: `With no arguments, list existing branches. The current branch is
 prefixed with an asterisk.
 
