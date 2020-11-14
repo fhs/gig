@@ -1,0 +1,28 @@
+gig init
+stdout 'Initialized empty Git repository in .git'
+
+! gig branch awesome
+stderr 'reference to HEAD not found'
+
+gig add hello.txt
+gig commit -m 'Initial commit'
+
+gig branch
+! stdout 'awesome'
+
+gig branch awesome
+gig branch
+stdout 'awesome'
+
+! gig branch -D
+stderr 'branch name required'
+
+! gig branch -D master
+stderr 'cannot delete checked out branch'
+
+gig branch -D awesome
+gig branch
+! stdout 'awesome'
+
+-- hello.txt --
+hello world

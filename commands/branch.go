@@ -11,29 +11,74 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// branchCmd represents the branch command
-var branchCmd = &cobra.Command{
-	Use:   "branch",
-	Short: "List branches",
-	Long:  ``,
-	RunE:  gitBranch,
+type branchCmd struct {
+	forceDelete bool // -D
 }
 
-func gitBranch(_ *cobra.Command, args []string) error {
+func (bc *branchCmd) run(_ *cobra.Command, args []string) error {
 	_, r, err := openRepo()
 	if err != nil {
 		return err
 	}
+	head, err := r.Head()
+	if err == plumbing.ErrReferenceNotFound {
+		// maybe there are no commits yet
+		head = nil
+	} else if err != nil {
+		return fmt.Errorf("HEAD: %v", err)
+	}
+
+	if bc.forceDelete {
+		if len(args) == 0 {
+			return fmt.Errorf("branch name required")
+		}
+		br := plumbing.NewBranchReferenceName(args[0])
+		if head != nil && head.Name() == br {
+			return fmt.Errorf("cannot delete checked out branch %q", br)
+		}
+		return r.Storer.RemoveReference(br)
+	}
+
+	if len(args) == 1 {
+		if head == nil {
+			return fmt.Errorf("reference to HEAD not found")
+		}
+		return r.Storer.SetReference(plumbing.NewHashReference(
+			plumbing.NewBranchReferenceName(args[0]),
+			head.Hash(),
+		))
+	}
+
 	bIter, err := r.Branches()
 	if err != nil {
 		return err
 	}
 	return bIter.ForEach(func(ref *plumbing.Reference) error {
-		fmt.Println(ref)
+		if head != nil && ref.Name() == head.Name() {
+			fmt.Printf("* %v\n", ref)
+		} else {
+			fmt.Printf("  %v\n", ref)
+		}
 		return nil
 	})
 }
 
 func init() {
-	rootCmd.AddCommand(branchCmd)
+	var bc branchCmd
+
+	cmd := &cobra.Command{
+		Use:   "branch [name]",
+		Short: "List, create, or delete branches",
+		Long: `With no arguments, list existing branches. The current branch is
+prefixed with an asterisk.
+
+If one argument is given, create a new branch named name which points
+to the current HEAD.
+`,
+		Args: cobra.MaximumNArgs(1),
+		RunE: bc.run,
+	}
+	rootCmd.AddCommand(cmd)
+
+	cmd.Flags().BoolVarP(&bc.forceDelete, "force-delete", "D", false, "Force delete a branch")
 }
