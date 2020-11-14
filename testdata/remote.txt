@@ -1,0 +1,13 @@
+gig init
+stdout 'Initialized empty Git repository in .git'
+
+gig remote add origin git@github.com:fhs/gig.git
+gig remote
+stdout 'origin'
+gig remote -v
+stdout 'origin	git@github.com:fhs/gig.git \(fetch\)'
+stdout 'origin	git@github.com:fhs/gig.git \(push\)'
+
+gig remote remove origin
+gig remote
+! stdout 'origin'
