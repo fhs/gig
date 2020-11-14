@@ -17,7 +17,7 @@ func TestMain(m *testing.M) {
 	}))
 }
 
-func TestFoo(t *testing.T) {
+func TestGig(t *testing.T) {
 	testscript.Run(t, testscript.Params{
 		Dir: "testdata",
 	})
