@@ -1,0 +1,28 @@
+gig init
+stdout 'Initialized empty Git repository in .git'
+
+! gig tag v1
+stderr 'reference not found'
+
+gig add hello.txt
+gig commit -m 'Initial commit'
+
+gig tag
+! stdout v1
+
+gig tag v1
+gig tag
+stdout v1
+
+! gig tag v1
+stderr 'tag already exists'
+
+gig tag -d v1
+gig tag
+! stdout v1
+
+! gig tag v1 v2
+stderr 'expected 1 argument but got 2'
+
+-- hello.txt --
+hello world
