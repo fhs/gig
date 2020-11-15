@@ -5,7 +5,6 @@
 package commands
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -15,16 +14,17 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "gig",
-	Short: "A git clone implemented in Go",
-	Long:  ``,
+	Use:          "gig",
+	Short:        "A git clone implemented in Go",
+	Long:         ``,
+	SilenceUsage: true,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		// The error seems to be already printed by cobra
 		os.Exit(1)
 	}
 }
