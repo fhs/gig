@@ -1,0 +1,28 @@
+gig init one
+stdout 'Initialized empty Git repository in'
+cd one
+gig add hello.txt
+gig commit -m 'Initial commit'
+cd ..
+
+# local URL requires an absote path. See https://github.com/fhs/gig/issues/3
+gig clone $WORK/one two
+
+cd two
+gig remote -v
+stdout 'one'
+cp ../world.txt .
+rm ../world.txt
+gig add world.txt
+gig commit -m 'second commit'
+gig push origin refs/heads/master:refs/heads/master
+cd ..
+
+cd one
+gig log
+stdout 'second commit'
+
+-- one/hello.txt --
+hello world
+-- world.txt --
+hello world
