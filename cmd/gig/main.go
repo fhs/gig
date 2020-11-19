@@ -5,8 +5,8 @@
 // Program gig is a clone of git command.
 package main
 
-import "github.com/fhs/gig/commands"
+import "github.com/fhs/gig/cli"
 
 func main() {
-	commands.Execute()
+	cli.Execute()
 }

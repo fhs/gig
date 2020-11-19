@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/fhs/gig/commands"
+	"github.com/fhs/gig/cli"
 	"github.com/rogpeppe/go-internal/testscript"
 )
 
@@ -25,6 +25,6 @@ func TestGig(t *testing.T) {
 }
 
 func gig() int {
-	commands.Execute()
+	cli.Execute()
 	return 0
 }

@@ -2,7 +2,7 @@
 // Use of this source code is governed by the
 // license that can be found in the LICENSE file.
 
-package commands
+package cli
 
 import (
 	git "github.com/go-git/go-git/v5"

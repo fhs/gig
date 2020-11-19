@@ -7,10 +7,10 @@ package main
 import (
 	"os"
 
-	"github.com/fhs/gig/commands"
+	"github.com/fhs/gig/cli"
 )
 
 func main() {
 	os.Args = append([]string{"gig", "upload-pack"}, os.Args[1:]...)
-	commands.Execute()
+	cli.Execute()
 }
