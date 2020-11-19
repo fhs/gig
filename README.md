@@ -1,11 +1,19 @@
 # gig
 
-Gig is an attempt at implementing a git-compatible command in pure Go
-(using [go-git](https://github.com/go-git/go-git)).
+Gig is a git client written in pure Go (using
+[go-git](https://github.com/go-git/go-git)). The main motivation was to
+create a git client for platforms that are not supported by the official
+git client (mainly Plan 9). Gig tries to be compatible with git CLI,
+so anyone familiar with the official git client will already know how
+to use gig.
 
-## Why?
+## Install
 
-This is intended for Plan 9, where git doesn’t work natively.
+```
+GO111MODULE=on go get github.com/fhs/gig/cmd/git-upload-pack
+GO111MODULE=on go get github.com/fhs/gig/cmd/git-receive-pack
+GO111MODULE=on go get github.com/fhs/gig
+```
 
 ## See also
 * https://github.com/oridb/git9
