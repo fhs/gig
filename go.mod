@@ -9,3 +9,5 @@ require (
 	github.com/sergi/go-diff v1.1.0
 	github.com/spf13/cobra v1.1.1
 )
+
+replace github.com/rogpeppe/go-internal => github.com/fhs/go-internal v1.6.3-0.20201118022552-1878fdc4ab8e
