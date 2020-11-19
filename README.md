@@ -12,7 +12,7 @@ to use gig.
 ```
 GO111MODULE=on go get github.com/fhs/gig/cmd/git-upload-pack
 GO111MODULE=on go get github.com/fhs/gig/cmd/git-receive-pack
-GO111MODULE=on go get github.com/fhs/gig
+GO111MODULE=on go get github.com/fhs/gig/cmd/gig
 ```
 
 ## See also

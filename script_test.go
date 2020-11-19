@@ -2,12 +2,13 @@
 // Use of this source code is governed by the
 // license that can be found in the LICENSE file.
 
-package main
+package gig
 
 import (
 	"os"
 	"testing"
 
+	"github.com/fhs/gig/commands"
 	"github.com/rogpeppe/go-internal/testscript"
 )
 
@@ -24,6 +25,6 @@ func TestGig(t *testing.T) {
 }
 
 func gig() int {
-	main()
+	commands.Execute()
 	return 0
 }
