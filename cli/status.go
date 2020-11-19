@@ -29,6 +29,8 @@ func gitStatus(_ *cobra.Command, args []string) error {
 		return err
 	}
 	// TODO: this is the --porcelain output
+	// We also need to show paths relative to current working directory,
+	// not relative to workdir root.
 	status, err := w.Status()
 	if err != nil {
 		return err

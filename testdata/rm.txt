@@ -1,0 +1,18 @@
+gig init
+gig add hello.txt
+gig status
+stdout 'A  hello.txt'
+gig commit -m 'Initial commit'
+
+# we want to test relative file paths
+mkdir a
+cd a
+
+gig rm ../hello.txt
+gig status
+stdout 'D  hello.txt'
+gig commit -m 'remove file'
+! exists hello.txt
+
+-- hello.txt --
+hello world
