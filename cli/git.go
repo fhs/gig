@@ -65,3 +65,11 @@ func openRepo() (string, *git.Repository, error) {
 	)
 	return root, r, err
 }
+
+func repoRelPath(root, filename string) (string, error) {
+	filename, err := filepath.Abs(filename)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Rel(root, filename)
+}

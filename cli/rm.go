@@ -5,8 +5,6 @@
 package cli
 
 import (
-	"path/filepath"
-
 	"github.com/spf13/cobra"
 )
 
@@ -30,11 +28,7 @@ func gitRm(_ *cobra.Command, args []string) error {
 	}
 
 	for _, a := range args {
-		a, err = filepath.Abs(a)
-		if err != nil {
-			return err
-		}
-		a, err = filepath.Rel(root, a)
+		a, err = repoRelPath(root, a)
 		if err != nil {
 			return err
 		}

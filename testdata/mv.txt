@@ -8,11 +8,13 @@ gig commit -m 'Initial commit'
 mkdir a
 cd a
 
-gig rm ../hello.txt
+gig mv ../hello.txt ../world.txt
 gig status
 stdout 'D  hello.txt'
-gig commit -m 'remove file'
+stdout 'A  world.txt'
+gig commit -m 'rename file'
 ! exists ../hello.txt
+exists ../world.txt
 
 -- hello.txt --
 hello world
