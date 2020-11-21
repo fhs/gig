@@ -8,7 +8,7 @@ gig rev-parse HEAD
 stdout .
 
 gig rev-parse --git-dir
-stdout $WORK/.git
+stdout '[\\/]\.git$'
 
 -- hello.txt --
 hello world
