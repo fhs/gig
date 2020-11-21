@@ -1,0 +1,14 @@
+gig init
+stdout 'Initialized empty Git repository in .git'
+
+gig add hello.txt
+gig commit -m 'Initial commit'
+
+gig rev-parse HEAD
+stdout .
+
+gig rev-parse --git-dir
+stdout $WORK/.git
+
+-- hello.txt --
+hello world
