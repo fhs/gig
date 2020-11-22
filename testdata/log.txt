@@ -1,0 +1,18 @@
+gig init
+gig add one.txt
+gig commit -m 'add file one'
+gig add two.txt
+gig commit -m 'add file two'
+gig log -n 0
+! stdout .
+gig log -n 1
+! stdout 'add file one'
+stdout 'add file two'
+gig log -n 10
+stdout 'add file one'
+stdout 'add file two'
+
+-- one.txt --
+this is file one
+-- two.txt --
+this is file two

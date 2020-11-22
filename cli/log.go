@@ -6,22 +6,18 @@ package cli
 
 import (
 	"fmt"
+	"io"
 	"path/filepath"
 
 	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/spf13/cobra"
 )
 
-// logCmd represents the log command
-var logCmd = &cobra.Command{
-	Use:   "log",
-	Short: "Show commit logs",
-	Long:  ``,
-	RunE:  gitLog,
+type logCmd struct {
+	n int
 }
 
-func gitLog(_ *cobra.Command, args []string) error {
+func (lc *logCmd) run(_ *cobra.Command, args []string) error {
 	p, err := findRepoRoot()
 	if err != nil {
 		return err
@@ -34,16 +30,33 @@ func gitLog(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	cIter, err := r.Log(&git.LogOptions{From: ref.Hash()})
+	iter, err := r.Log(&git.LogOptions{From: ref.Hash()})
 	if err != nil {
 		return err
 	}
-	return cIter.ForEach(func(c *object.Commit) error {
+	defer iter.Close()
+	for i := 0; lc.n < 0 || i < lc.n; i++ {
+		c, err := iter.Next()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
 		fmt.Println(c)
-		return nil
-	})
+	}
+	return nil
 }
 
 func init() {
-	rootCmd.AddCommand(logCmd)
+	var lc logCmd
+
+	cmd := &cobra.Command{
+		Use:   "log",
+		Short: "Show commit logs",
+		Long:  ``,
+		RunE:  lc.run,
+	}
+	rootCmd.AddCommand(cmd)
+	cmd.Flags().IntVarP(&lc.n, "max-count", "n", -1, "Limit the number of commits to output")
 }
