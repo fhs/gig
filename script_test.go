@@ -21,6 +21,14 @@ func TestMain(m *testing.M) {
 func TestGig(t *testing.T) {
 	testscript.Run(t, testscript.Params{
 		Dir: "testdata",
+		Setup: func(env *testscript.Env) error {
+			env.Vars = append(
+				env.Vars,
+				"GIT_AUTHOR_NAME=Test User",
+				"GIT_AUTHOR_EMAIL=testuser@example.com",
+			)
+			return nil
+		},
 	})
 }
 
