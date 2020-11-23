@@ -10,4 +10,4 @@ require (
 	github.com/spf13/cobra v1.1.1
 )
 
-replace github.com/rogpeppe/go-internal v1.6.2 => github.com/fhs/go-internal v1.6.3-0.20201121172747-bd283d966c23
+replace github.com/rogpeppe/go-internal v1.6.2 => github.com/fhs/go-internal v1.6.3-0.20201122174144-815d671f4ff9
