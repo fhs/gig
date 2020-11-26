@@ -1,0 +1,21 @@
+gig init
+stdout 'Initialized empty Git repository in .git'
+
+! gig commit -m 'this commit should not happen'
+stderr 'nothing to commit'
+
+gig add hello.txt
+gig commit -m 'add hello.txt'
+
+cp hello2.txt hello.txt
+! gig commit -m 'update message'
+stderr 'nothing to commit'
+
+gig add hello.txt
+gig commit -m 'update message'
+
+-- hello.txt --
+hello world
+
+-- hello2.txt --
+Hello, 世界

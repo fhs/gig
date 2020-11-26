@@ -34,6 +34,15 @@ func (cc *commitCmd) run(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+
+	status, err := w.Status()
+	if err != nil {
+		return err
+	}
+	if nothingInStaging(status) {
+		return fmt.Errorf(`nothing to commit (use "gig add")`)
+	}
+
 	name := os.Getenv("GIT_AUTHOR_NAME")
 	email := os.Getenv("GIT_AUTHOR_EMAIL")
 	if name == "" || email == "" {
@@ -98,6 +107,17 @@ are empty.
 	}
 	cmd.Flags().StringVarP(&cc.message, "message", "m", "", "Commit message")
 	rootCmd.AddCommand(cmd)
+}
+
+func nothingInStaging(s git.Status) bool {
+	for _, status := range s {
+		switch status.Staging {
+		case git.Unmodified, git.Untracked:
+		default:
+			return false
+		}
+	}
+	return true
 }
 
 func editFile(filename string) error {

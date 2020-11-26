@@ -26,6 +26,7 @@ func TestGig(t *testing.T) {
 				env.Vars,
 				"GIT_AUTHOR_NAME=Test User",
 				"GIT_AUTHOR_EMAIL=testuser@example.com",
+				"GIT_EDITOR=/invalid-editor",
 			)
 			return nil
 		},
