@@ -23,6 +23,7 @@ import (
 
 type commitCmd struct {
 	message string
+	all     bool
 }
 
 func (cc *commitCmd) run(_ *cobra.Command, args []string) error {
@@ -40,7 +41,12 @@ func (cc *commitCmd) run(_ *cobra.Command, args []string) error {
 		return err
 	}
 	if nothingInStaging(status) {
-		return fmt.Errorf(`nothing to commit (use "gig add")`)
+		if !cc.all {
+			return fmt.Errorf(`nothing to commit (use "gig add")`)
+		}
+		if nothingInWorktree(status) {
+			return fmt.Errorf(`nothing to commit, working tree clean`)
+		}
 	}
 
 	name := os.Getenv("GIT_AUTHOR_NAME")
@@ -81,6 +87,7 @@ func (cc *commitCmd) run(_ *cobra.Command, args []string) error {
 		cc.message = msg
 	}
 	_, err = w.Commit(cc.message, &git.CommitOptions{
+		All: cc.all,
 		Author: &object.Signature{
 			Name:  name,
 			Email: email,
@@ -106,12 +113,24 @@ are empty.
 		RunE: cc.run,
 	}
 	cmd.Flags().StringVarP(&cc.message, "message", "m", "", "Commit message")
+	cmd.Flags().BoolVarP(&cc.all, "all", "a", false, "Stage modified/deleted files before commit")
 	rootCmd.AddCommand(cmd)
 }
 
 func nothingInStaging(s git.Status) bool {
 	for _, status := range s {
 		switch status.Staging {
+		case git.Unmodified, git.Untracked:
+		default:
+			return false
+		}
+	}
+	return true
+}
+
+func nothingInWorktree(s git.Status) bool {
+	for _, status := range s {
+		switch status.Worktree {
 		case git.Unmodified, git.Untracked:
 		default:
 			return false

@@ -2,20 +2,31 @@ gig init
 stdout 'Initialized empty Git repository in .git'
 
 ! gig commit -m 'this commit should not happen'
-stderr 'nothing to commit'
+stderr 'nothing to commit \(use "gig add"\)'
+
+! gig commit -a -m 'this commit should not happen'
+stderr 'nothing to commit, working tree clean'
 
 gig add hello.txt
 gig commit -m 'add hello.txt'
 
+# worktree is dirty but staging is clean
 cp hello2.txt hello.txt
 ! gig commit -m 'update message'
-stderr 'nothing to commit'
+stderr 'nothing to commit \(use "gig add"\)'
+gig commit -a -m 'update message'
 
+# worktree is clean but staging is dirty
+cp hello3.txt hello.txt
 gig add hello.txt
-gig commit -m 'update message'
+gig commit -a -m 'update message'
+
 
 -- hello.txt --
 hello world
 
 -- hello2.txt --
 Hello, 世界
+
+-- hello3.txt --
+Hello, Welt
