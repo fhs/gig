@@ -5,6 +5,8 @@
 package cli
 
 import (
+	"fmt"
+
 	git "github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
 	"github.com/spf13/cobra"
@@ -31,17 +33,31 @@ func gitPush(cmd *cobra.Command, args []string) error {
 		remote = args[0]
 	}
 
-	// TODO: nil refspec seems to push all branches, not just current branch
 	var refspecs []config.RefSpec
 	if len(args) > 1 {
 		for _, s := range args[1:] {
 			refspecs = append(refspecs, config.RefSpec(s))
 		}
+	} else {
+		// No refspec was specified, so we want to push current branch.
+		// Nil refspec seems to push all branches.
+		head, err := r.Head()
+		if err != nil {
+			return err
+		}
+		refspecs = []config.RefSpec{
+			config.RefSpec(head.Name() + ":" + head.Name()),
+		}
 	}
-	return r.Push(&git.PushOptions{
+	err = r.Push(&git.PushOptions{
 		RemoteName: remote,
 		RefSpecs:   refspecs,
 	})
+	if err == git.NoErrAlreadyUpToDate {
+		fmt.Printf("%v\n", err)
+		return nil
+	}
+	return err
 }
 
 func init() {

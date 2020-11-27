@@ -1,0 +1,32 @@
+# Test we only push the current branch if no branch is specified.
+
+gig init one
+cd one
+gig add hello.txt
+gig commit -m 'Initial commit'
+cd ..
+
+# local URL requires an absote path. See https://github.com/fhs/gig/issues/3
+gig clone $WORK/one two
+
+# Create a new branch and then push from master.
+cd two
+gig co -b branch1
+cp ../world.txt .
+rm ../world.txt
+gig add world.txt
+gig commit -m 'second commit'
+gig co master
+gig push
+stdout 'already up-to-date'
+cd ..
+
+# The new branch should not show up on remote.
+cd one
+gig branch
+! stdout 'branch1'
+
+-- one/hello.txt --
+hello world
+-- world.txt --
+hello world
