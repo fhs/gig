@@ -20,7 +20,8 @@ var addCmd = &cobra.Command{
 
 func gitAdd(_ *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("Nothing specified, nothing added.")
+		fmt.Printf("Nothing specified, nothing added.")
+		return nil
 	}
 
 	root, r, err := openRepo()

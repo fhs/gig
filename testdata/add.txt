@@ -1,0 +1,5 @@
+gig init one
+
+# With no arguments, exit code is still zero.
+gig add
+stdout 'Nothing specified, nothing added.'
