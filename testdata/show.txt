@@ -1,0 +1,26 @@
+gig init
+
+! gig show
+stderr 'reference not found'
+
+gig add hello.txt
+gig commit -m 'Initial commit'
+# We need this second commit because 'gig show'
+# currently cannot show the diff of the initial commit.
+gig add world.txt
+gig commit -m 'second commit'
+gig tag v1.2.3
+
+gig show
+stdout 'second commit'
+gig show HEAD
+stdout 'second commit'
+gig show master
+stdout 'second commit'
+gig show v1.2.3
+stdout 'second commit'
+
+-- hello.txt --
+hello world
+-- world.txt --
+hello world

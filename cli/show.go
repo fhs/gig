@@ -13,31 +13,29 @@ import (
 
 // showCmd represents the show command
 var showCmd = &cobra.Command{
-	Use:   "show",
+	Use:   "show [object]",
 	Short: "Show various types of objects",
 	Long:  ``,
+	Args:  cobra.MaximumNArgs(1),
 	RunE:  gitShow,
 }
 
 func gitShow(_ *cobra.Command, args []string) error {
-	// TODO: support hash sub-string prefix
 	// TODO: initial commit patch
 
 	_, r, err := openRepo()
 	if err != nil {
 		return err
 	}
-	var h plumbing.Hash
-	if len(args) < 1 {
-		ref, err := r.Head()
-		if err != nil {
-			return err
-		}
-		h = ref.Hash()
-	} else {
-		h = plumbing.NewHash(args[0])
+	obj := "HEAD"
+	if len(args) > 0 {
+		obj = args[0]
 	}
-	commit, err := r.CommitObject(h)
+	h, err := r.ResolveRevision(plumbing.Revision(obj))
+	if err != nil {
+		return err
+	}
+	commit, err := r.CommitObject(*h)
 	if err != nil {
 		return err
 	}
