@@ -1,0 +1,23 @@
+gig init one
+cd one
+gig add hello.txt
+gig commit -m 'Initial commit'
+# We need this second commit because 'gig show'
+# currently cannot show the diff of the initial commit.
+gig add world.txt
+gig commit -m 'second commit'
+cd ..
+
+gig init two
+cd two
+gig remote add origin $WORK/one
+! gig show origin/master
+stderr 'reference not found'
+gig fetch origin
+gig show origin/master
+stdout 'second commit'
+
+-- one/hello.txt --
+hello world
+-- one/world.txt --
+hello world
