@@ -21,8 +21,6 @@ var showCmd = &cobra.Command{
 }
 
 func gitShow(_ *cobra.Command, args []string) error {
-	// TODO: initial commit patch
-
 	_, r, err := openRepo()
 	if err != nil {
 		return err
@@ -40,15 +38,20 @@ func gitShow(_ *cobra.Command, args []string) error {
 		return err
 	}
 	fmt.Println(commit.String())
-	parent, err := commit.Parent(0)
-	if err != nil {
-		return err
+
+	// TODO: Implement patch for initial commit (0 parents)
+	// and merge commits (2 parents).
+	if commit.NumParents() == 1 {
+		parent, err := commit.Parent(0)
+		if err != nil {
+			return err
+		}
+		patch, err := parent.Patch(commit)
+		if err != nil {
+			return err
+		}
+		fmt.Println(patch)
 	}
-	patch, err := parent.Patch(commit)
-	if err != nil {
-		return err
-	}
-	fmt.Println(patch)
 	return nil
 }
 
