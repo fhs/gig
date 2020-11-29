@@ -5,13 +5,14 @@
 package cli
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
 
+	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/filemode"
+	fdiff "github.com/go-git/go-git/v5/plumbing/format/diff"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/utils/diff"
 	"github.com/sergi/go-diff/diffmatchpatch"
@@ -49,46 +50,121 @@ func gitDiff(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	return tree.Files().ForEach(func(file *object.File) error {
-		reader, err := file.Reader()
+	// TODO: We need to compare worktree with staging instead of HEAD.
+	return worktreeDiff(os.Stdout, tree, root)
+}
+
+func worktreeDiff(w io.Writer, from *object.Tree, root string) error {
+	iter := from.Files()
+	defer iter.Close()
+	var filePatches []fdiff.FilePatch
+	for {
+		file, err := iter.Next()
+		if err == io.EOF {
+			break
+		}
 		if err != nil {
 			return err
 		}
-		old, err := ioutil.ReadAll(reader)
+		fromContent, err := file.Contents()
 		if err != nil {
 			return err
 		}
-		cur, err := ioutil.ReadFile(filepath.Join(root, file.Name))
+		b, err := ioutil.ReadFile(filepath.Join(root, file.Name))
 		if err != nil {
-			return err
+			if !os.IsNotExist(err) {
+				return err
+			}
+			b = nil
 		}
-		if olds, curs := string(old), string(cur); olds != curs {
-			fmt.Println(file.Name, file.Mode)
-			lineDiff(os.Stdout, olds, curs)
+		toContent := string(b)
+		if fromContent != toContent {
+			fp, err := fileDiff(os.Stdout, file, fromContent, toContent)
+			if err != nil {
+				return err
+			}
+			filePatches = append(filePatches, fp)
 		}
-		return nil
+	}
+	ue := fdiff.NewUnifiedEncoder(w, fdiff.DefaultContextLines)
+	return ue.Encode(&gigPatch{
+		message:     "",
+		filePatches: filePatches,
 	})
 }
 
-func lineDiff(w io.Writer, a, b string) {
-	// how to print this in unified diff format?
+func fileDiff(w io.Writer, f *object.File, a, b string) (fdiff.FilePatch, error) {
 	diffs := diff.Do(a, b)
+	var chunks []fdiff.Chunk
 	for _, d := range diffs {
-		lines := d.Text
-		if lines[len(lines)-1] == '\n' {
-			lines = lines[:len(lines)-1]
-		}
-		chr := rune(' ')
+		var op fdiff.Operation
 		switch d.Type {
+		case diffmatchpatch.DiffEqual:
+			op = fdiff.Equal
 		case diffmatchpatch.DiffDelete:
-			chr = '-'
+			op = fdiff.Delete
 		case diffmatchpatch.DiffInsert:
-			chr = '+'
+			op = fdiff.Add
 		}
-		lines = strings.Replace(lines, "\n", string([]rune{'\n', chr}), -1)
-		fmt.Fprintf(w, "%c%s\n", chr, lines)
+		chunks = append(chunks, &gigChunk{content: d.Text, op: op})
 	}
+
+	isBinary, err := f.IsBinary()
+	if err != nil {
+		return nil, err
+	}
+	fp := &gigFilePatch{
+		isBinary: isBinary,
+		from: &gigFile{
+			hash: f.Hash,
+			mode: f.Mode,
+			path: f.Name,
+		},
+		to: &gigFile{
+			hash: f.Hash, // TODO
+			mode: f.Mode, // TODO
+			path: f.Name,
+		},
+		chunks: chunks,
+	}
+	return fp, nil
 }
+
+type gigPatch struct {
+	message     string
+	filePatches []fdiff.FilePatch
+}
+
+func (p *gigPatch) FilePatches() []fdiff.FilePatch { return p.filePatches }
+func (p *gigPatch) Message() string                { return p.message }
+
+type gigFilePatch struct {
+	isBinary bool
+	from, to *gigFile
+	chunks   []fdiff.Chunk
+}
+
+func (fp *gigFilePatch) IsBinary() bool               { return fp.isBinary }
+func (fp *gigFilePatch) Files() (from, to fdiff.File) { return fp.from, fp.to }
+func (fp *gigFilePatch) Chunks() []fdiff.Chunk        { return fp.chunks }
+
+type gigFile struct {
+	hash plumbing.Hash
+	mode filemode.FileMode
+	path string
+}
+
+func (f *gigFile) Hash() plumbing.Hash     { return f.hash }
+func (f *gigFile) Mode() filemode.FileMode { return f.mode }
+func (f *gigFile) Path() string            { return f.path }
+
+type gigChunk struct {
+	content string
+	op      fdiff.Operation
+}
+
+func (c *gigChunk) Content() string       { return c.content }
+func (c *gigChunk) Type() fdiff.Operation { return c.op }
 
 func init() {
 	rootCmd.AddCommand(diffCmd)
