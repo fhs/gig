@@ -19,6 +19,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(diffCmd)
+}
+
 // diffCmd represents the diff command
 var diffCmd = &cobra.Command{
 	Use:     "diff",
@@ -165,7 +169,3 @@ type gigChunk struct {
 
 func (c *gigChunk) Content() string       { return c.content }
 func (c *gigChunk) Type() fdiff.Operation { return c.op }
-
-func init() {
-	rootCmd.AddCommand(diffCmd)
-}

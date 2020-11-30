@@ -21,6 +21,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	var cc commitCmd
+
+	cmd := &cobra.Command{
+		Use:     "commit",
+		Aliases: []string{"ci"},
+		Short:   "Record changes to the repository",
+		Long: `If the commit message (-m flag) is empty, a text editor will be opened to
+edit the commit message. The text editor is configured by the either the
+$GIT_EDITOR, $VISUAL, or $EDITOR environment variable, in that order,
+falling back to a default editor if all three environment variables
+are empty.
+`,
+		RunE: cc.run,
+	}
+	cmd.Flags().StringVarP(&cc.message, "message", "m", "", "Commit message")
+	cmd.Flags().BoolVarP(&cc.all, "all", "a", false, "Stage modified/deleted files before commit")
+	rootCmd.AddCommand(cmd)
+}
+
 type commitCmd struct {
 	message string
 	all     bool
@@ -95,26 +115,6 @@ func (cc *commitCmd) run(_ *cobra.Command, args []string) error {
 		},
 	})
 	return err
-}
-
-func init() {
-	var cc commitCmd
-
-	cmd := &cobra.Command{
-		Use:     "commit",
-		Aliases: []string{"ci"},
-		Short:   "Record changes to the repository",
-		Long: `If the commit message (-m flag) is empty, a text editor will be opened to
-edit the commit message. The text editor is configured by the either the
-$GIT_EDITOR, $VISUAL, or $EDITOR environment variable, in that order,
-falling back to a default editor if all three environment variables
-are empty.
-`,
-		RunE: cc.run,
-	}
-	cmd.Flags().StringVarP(&cc.message, "message", "m", "", "Commit message")
-	cmd.Flags().BoolVarP(&cc.all, "all", "a", false, "Stage modified/deleted files before commit")
-	rootCmd.AddCommand(cmd)
 }
 
 func nothingInStaging(s git.Status) bool {

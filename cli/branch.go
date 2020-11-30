@@ -11,6 +11,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	var bc branchCmd
+
+	cmd := &cobra.Command{
+		Use:     "branch [name...]",
+		Aliases: []string{"br"},
+		Short:   "List, create, or delete branches",
+		Long: `With no arguments, list existing branches. The current branch is
+prefixed with an asterisk.
+
+If one argument is given, create a new branch named name which points
+to the current HEAD.
+`,
+		RunE: bc.run,
+	}
+	rootCmd.AddCommand(cmd)
+
+	cmd.Flags().BoolVarP(&bc.forceDelete, "force-delete", "D", false, "Force delete a branch")
+}
+
 type branchCmd struct {
 	forceDelete bool // -D
 }
@@ -69,24 +89,4 @@ func (bc *branchCmd) run(_ *cobra.Command, args []string) error {
 		}
 		return nil
 	})
-}
-
-func init() {
-	var bc branchCmd
-
-	cmd := &cobra.Command{
-		Use:     "branch [name...]",
-		Aliases: []string{"br"},
-		Short:   "List, create, or delete branches",
-		Long: `With no arguments, list existing branches. The current branch is
-prefixed with an asterisk.
-
-If one argument is given, create a new branch named name which points
-to the current HEAD.
-`,
-		RunE: bc.run,
-	}
-	rootCmd.AddCommand(cmd)
-
-	cmd.Flags().BoolVarP(&bc.forceDelete, "force-delete", "D", false, "Force delete a branch")
 }

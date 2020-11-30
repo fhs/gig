@@ -10,6 +10,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	var cc checkoutCmd
+
+	cmd := &cobra.Command{
+		Use:     "checkout branch",
+		Aliases: []string{"co"},
+		Short:   "Switch branches",
+		Long:    ``,
+		Args:    cobra.ExactArgs(1),
+		RunE:    cc.run,
+	}
+	rootCmd.AddCommand(cmd)
+
+	cmd.Flags().BoolVarP(&cc.create, "create", "b", false, "Create branch before checkout")
+}
+
 type checkoutCmd struct {
 	create bool
 }
@@ -30,20 +46,4 @@ func (cc *checkoutCmd) run(cmd *cobra.Command, args []string) error {
 		Force:  false,
 		Keep:   true,
 	})
-}
-
-func init() {
-	var cc checkoutCmd
-
-	cmd := &cobra.Command{
-		Use:     "checkout branch",
-		Aliases: []string{"co"},
-		Short:   "Switch branches",
-		Long:    ``,
-		Args:    cobra.ExactArgs(1),
-		RunE:    cc.run,
-	}
-	rootCmd.AddCommand(cmd)
-
-	cmd.Flags().BoolVarP(&cc.create, "create", "b", false, "Create branch before checkout")
 }

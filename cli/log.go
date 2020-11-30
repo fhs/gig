@@ -16,6 +16,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	var lc logCmd
+
+	cmd := &cobra.Command{
+		Use:   "log",
+		Short: "Show commit logs",
+		Long:  ``,
+		RunE:  lc.run,
+	}
+	rootCmd.AddCommand(cmd)
+	cmd.Flags().IntVarP(&lc.n, "max-count", "n", -1, "Limit the number of commits to output")
+	cmd.Flags().StringVar(&lc.format, "format", "", "Print commits in the given format")
+}
+
 type logCmd struct {
 	n      int
 	format string
@@ -114,18 +128,4 @@ func formatCommit(w io.Writer, format string, c *object.Commit) error {
 		fb = fb[i:]
 	}
 	return nil
-}
-
-func init() {
-	var lc logCmd
-
-	cmd := &cobra.Command{
-		Use:   "log",
-		Short: "Show commit logs",
-		Long:  ``,
-		RunE:  lc.run,
-	}
-	rootCmd.AddCommand(cmd)
-	cmd.Flags().IntVarP(&lc.n, "max-count", "n", -1, "Limit the number of commits to output")
-	cmd.Flags().StringVar(&lc.format, "format", "", "Print commits in the given format")
 }

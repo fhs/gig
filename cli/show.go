@@ -11,6 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(showCmd)
+}
+
 // showCmd represents the show command
 var showCmd = &cobra.Command{
 	Use:   "show [object]",
@@ -53,8 +57,4 @@ func gitShow(_ *cobra.Command, args []string) error {
 		fmt.Println(patch)
 	}
 	return nil
-}
-
-func init() {
-	rootCmd.AddCommand(showCmd)
 }

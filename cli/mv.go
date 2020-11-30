@@ -8,6 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(mvCmd)
+}
+
 // mvCmd represents the rm command
 var mvCmd = &cobra.Command{
 	Use:   "mv source destination",
@@ -36,8 +40,4 @@ func gitMv(_ *cobra.Command, args []string) error {
 	}
 	_, err = w.Move(src, dst)
 	return err
-}
-
-func init() {
-	rootCmd.AddCommand(mvCmd)
 }

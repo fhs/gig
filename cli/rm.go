@@ -8,6 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(rmCmd)
+}
+
 // rmCmd represents the rm command
 var rmCmd = &cobra.Command{
 	Use:   "rm file ...",
@@ -38,8 +42,4 @@ func gitRm(_ *cobra.Command, args []string) error {
 		}
 	}
 	return nil
-}
-
-func init() {
-	rootCmd.AddCommand(rmCmd)
 }

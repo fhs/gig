@@ -11,6 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(receivePackCmd)
+}
+
 // receivePackCmd represents the receive-pack command
 var receivePackCmd = &cobra.Command{
 	Use:   "receive-pack directory",
@@ -24,8 +28,4 @@ func gitReceivePack(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("usage: receive-pack <dir>")
 	}
 	return file.ServeReceivePack(dotGitDir(args[0]))
-}
-
-func init() {
-	rootCmd.AddCommand(receivePackCmd)
 }

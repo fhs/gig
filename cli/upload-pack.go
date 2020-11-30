@@ -11,6 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(uploadPackCmd)
+}
+
 // uploadPackCmd represents the upload-pack command
 var uploadPackCmd = &cobra.Command{
 	Use:   "upload-pack directory",
@@ -24,8 +28,4 @@ func gitUploadPack(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("usage: upload-pack <dir>")
 	}
 	return file.ServeUploadPack(dotGitDir(args[0]))
-}
-
-func init() {
-	rootCmd.AddCommand(uploadPackCmd)
 }

@@ -10,6 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(addCmd)
+}
+
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add file ...",
@@ -44,8 +48,4 @@ func gitAdd(_ *cobra.Command, args []string) error {
 		}
 	}
 	return nil
-}
-
-func init() {
-	rootCmd.AddCommand(addCmd)
 }

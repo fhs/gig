@@ -11,6 +11,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	var tc tagCmd
+
+	cmd := &cobra.Command{
+		Use:   "tag [name...]",
+		Short: "Create, list, or delete a tag",
+		Long: `If no arguments are given, list existing tags.
+
+If a tag name is given, create that tag pointing to current HEAD.
+`,
+		RunE: tc.run,
+	}
+	rootCmd.AddCommand(cmd)
+
+	cmd.Flags().BoolVarP(&tc.delete, "delete", "d", false, "Delete existing tags with the given names")
+}
+
 type tagCmd struct {
 	delete bool
 }
@@ -50,21 +67,4 @@ func (tc *tagCmd) run(_ *cobra.Command, args []string) error {
 	}
 	_, err = r.CreateTag(args[0], head.Hash(), nil)
 	return err
-}
-
-func init() {
-	var tc tagCmd
-
-	cmd := &cobra.Command{
-		Use:   "tag [name...]",
-		Short: "Create, list, or delete a tag",
-		Long: `If no arguments are given, list existing tags.
-
-If a tag name is given, create that tag pointing to current HEAD.
-`,
-		RunE: tc.run,
-	}
-	rootCmd.AddCommand(cmd)
-
-	cmd.Flags().BoolVarP(&tc.delete, "delete", "d", false, "Delete existing tags with the given names")
 }

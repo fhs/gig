@@ -12,6 +12,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(cloneCmd)
+}
+
 // cloneCmd represents the clone command
 var cloneCmd = &cobra.Command{
 	Use:   "clone url directory",
@@ -30,8 +34,4 @@ func gitClone(_ *cobra.Command, args []string) error {
 		Progress: os.Stdout,
 	})
 	return err
-}
-
-func init() {
-	rootCmd.AddCommand(cloneCmd)
 }

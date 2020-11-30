@@ -12,6 +12,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(pushCmd)
+}
+
 // pushCmd represents the push command
 var pushCmd = &cobra.Command{
 	Use:   "push [[repository] refspec...]",
@@ -58,8 +62,4 @@ func gitPush(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 	return err
-}
-
-func init() {
-	rootCmd.AddCommand(pushCmd)
 }

@@ -11,6 +11,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	var rc remoteCmd
+
+	cmd := &cobra.Command{
+		Use:   "remote",
+		Short: "Manage set of tracked repositories",
+		Long:  ``,
+		RunE:  rc.list,
+	}
+	rootCmd.AddCommand(cmd)
+	cmd.Flags().BoolVarP(&rc.verbose, "verbose", "v", false, "Be more verbose")
+
+	cmd.AddCommand(&cobra.Command{
+		Use:   "add name url",
+		Short: "Add a remote named name for the repository at url",
+		Long:  ``,
+		Args:  cobra.ExactArgs(2),
+		RunE:  rc.add,
+	}, &cobra.Command{
+		Use:   "remove name",
+		Short: "Remove the remote named name",
+		Long:  ``,
+		Args:  cobra.ExactArgs(1),
+		RunE:  rc.remove,
+	})
+}
+
 type remoteCmd struct {
 	verbose bool
 }
@@ -53,31 +80,4 @@ func (rc *remoteCmd) remove(_ *cobra.Command, args []string) error {
 		return err
 	}
 	return repo.DeleteRemote(args[0])
-}
-
-func init() {
-	var rc remoteCmd
-
-	cmd := &cobra.Command{
-		Use:   "remote",
-		Short: "Manage set of tracked repositories",
-		Long:  ``,
-		RunE:  rc.list,
-	}
-	rootCmd.AddCommand(cmd)
-	cmd.Flags().BoolVarP(&rc.verbose, "verbose", "v", false, "Be more verbose")
-
-	cmd.AddCommand(&cobra.Command{
-		Use:   "add name url",
-		Short: "Add a remote named name for the repository at url",
-		Long:  ``,
-		Args:  cobra.ExactArgs(2),
-		RunE:  rc.add,
-	}, &cobra.Command{
-		Use:   "remove name",
-		Short: "Remove the remote named name",
-		Long:  ``,
-		Args:  cobra.ExactArgs(1),
-		RunE:  rc.remove,
-	})
 }

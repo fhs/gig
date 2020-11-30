@@ -9,6 +9,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(fetchCmd)
+}
+
 // fetchCmd represents the fetch command
 var fetchCmd = &cobra.Command{
 	Use:   "fetch [remote]",
@@ -30,8 +34,4 @@ func gitFetch(cmd *cobra.Command, args []string) error {
 	return r.Fetch(&git.FetchOptions{
 		RemoteName: remote,
 	})
-}
-
-func init() {
-	rootCmd.AddCommand(fetchCmd)
 }

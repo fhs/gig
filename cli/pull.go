@@ -9,6 +9,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(pullCmd)
+}
+
 // pullCmd represents the pull command
 var pullCmd = &cobra.Command{
 	Use:   "pull [remote]",
@@ -36,8 +40,4 @@ func gitPull(cmd *cobra.Command, args []string) error {
 	return w.Pull(&git.PullOptions{
 		RemoteName: remote,
 	})
-}
-
-func init() {
-	rootCmd.AddCommand(pullCmd)
 }

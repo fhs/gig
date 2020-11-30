@@ -14,6 +14,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(initCmd)
+}
+
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init [directory]",
@@ -39,8 +43,4 @@ func gitInit(_ *cobra.Command, args []string) error {
 	}
 	fmt.Printf("Initialized empty Git repository in %v\n", dotgit)
 	return nil
-}
-
-func init() {
-	rootCmd.AddCommand(initCmd)
 }

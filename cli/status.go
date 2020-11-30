@@ -10,6 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(statusCmd)
+}
+
 // statusCmd represents the status command
 var statusCmd = &cobra.Command{
 	Use:     "status",
@@ -37,8 +41,4 @@ func gitStatus(_ *cobra.Command, args []string) error {
 	}
 	fmt.Print(status)
 	return nil
-}
-
-func init() {
-	rootCmd.AddCommand(statusCmd)
 }

@@ -12,6 +12,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	var rpc revParseCmd
+
+	cmd := &cobra.Command{
+		Use:   "rev-parse [revision ...]",
+		Short: "Parse and resolve revision to corresponding hash",
+		Long:  ``,
+		RunE:  rpc.run,
+	}
+	rootCmd.AddCommand(cmd)
+	cmd.Flags().BoolVar(&rpc.abbrevRef, "abbrev-ref", false, "No-op")
+	cmd.Flags().BoolVar(&rpc.gitDir, "git-dir", false, "Show the path to the .git directory")
+}
+
 type revParseCmd struct {
 	abbrevRef bool
 	gitDir    bool
@@ -34,18 +48,4 @@ func (rpc *revParseCmd) run(_ *cobra.Command, args []string) error {
 		fmt.Printf("%v\n", h)
 	}
 	return nil
-}
-
-func init() {
-	var rpc revParseCmd
-
-	cmd := &cobra.Command{
-		Use:   "rev-parse [revision ...]",
-		Short: "Parse and resolve revision to corresponding hash",
-		Long:  ``,
-		RunE:  rpc.run,
-	}
-	rootCmd.AddCommand(cmd)
-	cmd.Flags().BoolVar(&rpc.abbrevRef, "abbrev-ref", false, "No-op")
-	cmd.Flags().BoolVar(&rpc.gitDir, "git-dir", false, "Show the path to the .git directory")
 }

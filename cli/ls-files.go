@@ -13,6 +13,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	var lfc LsFilesCmd
+
+	cmd := &cobra.Command{
+		Use:   "ls-files",
+		Short: "Show information about files in the index",
+		Long:  ``,
+		RunE:  lfc.run,
+	}
+	rootCmd.AddCommand(cmd)
+	cmd.Flags().BoolVarP(&lfc.stage, "stage", "s", false, "Show staged contents' mode bits, object name and stage number")
+}
+
 type LsFilesCmd struct {
 	stage bool
 }
@@ -41,17 +54,4 @@ func (lfc *LsFilesCmd) run(_ *cobra.Command, args []string) error {
 		}
 	}
 	return nil
-}
-
-func init() {
-	var lfc LsFilesCmd
-
-	cmd := &cobra.Command{
-		Use:   "ls-files",
-		Short: "Show information about files in the index",
-		Long:  ``,
-		RunE:  lfc.run,
-	}
-	rootCmd.AddCommand(cmd)
-	cmd.Flags().BoolVarP(&lfc.stage, "stage", "s", false, "Show staged contents' mode bits, object name and stage number")
 }
