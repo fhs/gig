@@ -1,0 +1,15 @@
+gig init repo
+cd repo
+gig add a.txt
+gig commit -m 'Initial commit'
+
+gig ls-files
+stdout 'a.txt'
+
+gig ls-files -s
+stdout '100644 4cb29ea38f70d7c61b2a3a25b02e3bdf44905402 0	a.txt'
+
+-- repo/a.txt --
+one
+two
+three
