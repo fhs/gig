@@ -9,19 +9,17 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(mvCmd)
+	cmd := &cobra.Command{
+		Use:   "mv source destination",
+		Short: "Move or rename a file or directory",
+		Long:  ``,
+		Args:  cobra.ExactArgs(2),
+		RunE:  mvCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// mvCmd represents the rm command
-var mvCmd = &cobra.Command{
-	Use:   "mv source destination",
-	Short: "Move or rename a file or directory",
-	Long:  ``,
-	Args:  cobra.ExactArgs(2),
-	RunE:  gitMv,
-}
-
-func gitMv(_ *cobra.Command, args []string) error {
+func mvCmd(_ *cobra.Command, args []string) error {
 	root, r, err := openRepo()
 	if err != nil {
 		return err

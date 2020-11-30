@@ -13,18 +13,16 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(cloneCmd)
+	cmd := &cobra.Command{
+		Use:   "clone url directory",
+		Short: "Clone a repository into a new directory",
+		Long:  ``,
+		RunE:  cloneCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// cloneCmd represents the clone command
-var cloneCmd = &cobra.Command{
-	Use:   "clone url directory",
-	Short: "Clone a repository into a new directory",
-	Long:  ``,
-	RunE:  gitClone,
-}
-
-func gitClone(_ *cobra.Command, args []string) error {
+func cloneCmd(_ *cobra.Command, args []string) error {
 	if len(args) < 2 {
 		return fmt.Errorf("usage: gig clone <url> <dir>")
 	}

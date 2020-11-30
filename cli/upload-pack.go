@@ -12,18 +12,16 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(uploadPackCmd)
+	cmd := &cobra.Command{
+		Use:   "upload-pack directory",
+		Short: "Send objects packed back to git-fetch-pack",
+		Long:  ``,
+		RunE:  uploadPackCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// uploadPackCmd represents the upload-pack command
-var uploadPackCmd = &cobra.Command{
-	Use:   "upload-pack directory",
-	Short: "Send objects packed back to git-fetch-pack",
-	Long:  ``,
-	RunE:  gitUploadPack,
-}
-
-func gitUploadPack(_ *cobra.Command, args []string) error {
+func uploadPackCmd(_ *cobra.Command, args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("usage: upload-pack <dir>")
 	}

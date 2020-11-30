@@ -20,19 +20,17 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(diffCmd)
+	cmd := &cobra.Command{
+		Use:     "diff",
+		Aliases: []string{"di"},
+		Short:   "Show changes between commits",
+		Long:    ``,
+		RunE:    diffCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// diffCmd represents the diff command
-var diffCmd = &cobra.Command{
-	Use:     "diff",
-	Aliases: []string{"di"},
-	Short:   "Show changes between commits",
-	Long:    ``,
-	RunE:    gitDiff,
-}
-
-func gitDiff(_ *cobra.Command, args []string) error {
+func diffCmd(_ *cobra.Command, args []string) error {
 	root, r, err := openRepo()
 	if err != nil {
 		return err

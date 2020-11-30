@@ -12,18 +12,16 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(receivePackCmd)
+	cmd := &cobra.Command{
+		Use:   "receive-pack directory",
+		Short: "Receive what is pushed into the repository",
+		Long:  ``,
+		RunE:  receivePackCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// receivePackCmd represents the receive-pack command
-var receivePackCmd = &cobra.Command{
-	Use:   "receive-pack directory",
-	Short: "Receive what is pushed into the repository",
-	Long:  ``,
-	RunE:  gitReceivePack,
-}
-
-func gitReceivePack(_ *cobra.Command, args []string) error {
+func receivePackCmd(_ *cobra.Command, args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("usage: receive-pack <dir>")
 	}

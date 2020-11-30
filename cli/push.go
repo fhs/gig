@@ -13,20 +13,18 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(pushCmd)
-}
-
-// pushCmd represents the push command
-var pushCmd = &cobra.Command{
-	Use:   "push [[repository] refspec...]",
-	Short: "Update remote refs along with associated objects",
-	Long: `If not arguments are given, update the remote repository named origin.
+	cmd := &cobra.Command{
+		Use:   "push [[repository] refspec...]",
+		Short: "Update remote refs along with associated objects",
+		Long: `If not arguments are given, update the remote repository named origin.
 
 If no refspec is given, pushes current branch.`,
-	RunE: gitPush,
+		RunE: pushCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-func gitPush(cmd *cobra.Command, args []string) error {
+func pushCmd(cmd *cobra.Command, args []string) error {
 	_, r, err := openRepo()
 	if err != nil {
 		return err

@@ -15,18 +15,16 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(initCmd)
+	cmd := &cobra.Command{
+		Use:   "init [directory]",
+		Short: "Create an empty Git repository",
+		Long:  ``,
+		RunE:  initCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// initCmd represents the init command
-var initCmd = &cobra.Command{
-	Use:   "init [directory]",
-	Short: "Create an empty Git repository",
-	Long:  ``,
-	RunE:  gitInit,
-}
-
-func gitInit(_ *cobra.Command, args []string) error {
+func initCmd(_ *cobra.Command, args []string) error {
 	if len(args) > 1 {
 		return fmt.Errorf("usage: gig init [directory]")
 	}

@@ -11,19 +11,17 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(statusCmd)
+	cmd := &cobra.Command{
+		Use:     "status",
+		Aliases: []string{"st"},
+		Short:   "Show the working tree status",
+		Long:    ``,
+		RunE:    statusCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// statusCmd represents the status command
-var statusCmd = &cobra.Command{
-	Use:     "status",
-	Aliases: []string{"st"},
-	Short:   "Show the working tree status",
-	Long:    ``,
-	RunE:    gitStatus,
-}
-
-func gitStatus(_ *cobra.Command, args []string) error {
+func statusCmd(_ *cobra.Command, args []string) error {
 	_, r, err := openRepo()
 	if err != nil {
 		return err

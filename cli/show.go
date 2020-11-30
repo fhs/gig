@@ -12,19 +12,17 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(showCmd)
+	cmd := &cobra.Command{
+		Use:   "show [object]",
+		Short: "Show various types of objects",
+		Long:  ``,
+		Args:  cobra.MaximumNArgs(1),
+		RunE:  showCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// showCmd represents the show command
-var showCmd = &cobra.Command{
-	Use:   "show [object]",
-	Short: "Show various types of objects",
-	Long:  ``,
-	Args:  cobra.MaximumNArgs(1),
-	RunE:  gitShow,
-}
-
-func gitShow(_ *cobra.Command, args []string) error {
+func showCmd(_ *cobra.Command, args []string) error {
 	_, r, err := openRepo()
 	if err != nil {
 		return err

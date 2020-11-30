@@ -9,19 +9,17 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(rmCmd)
+	cmd := &cobra.Command{
+		Use:   "rm file ...",
+		Short: "Remove files from the working tree and from the index",
+		Long:  ``,
+		Args:  cobra.MinimumNArgs(1),
+		RunE:  rmCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// rmCmd represents the rm command
-var rmCmd = &cobra.Command{
-	Use:   "rm file ...",
-	Short: "Remove files from the working tree and from the index",
-	Long:  ``,
-	Args:  cobra.MinimumNArgs(1),
-	RunE:  gitRm,
-}
-
-func gitRm(_ *cobra.Command, args []string) error {
+func rmCmd(_ *cobra.Command, args []string) error {
 	root, r, err := openRepo()
 	if err != nil {
 		return err

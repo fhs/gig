@@ -10,20 +10,18 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(pullCmd)
-}
-
-// pullCmd represents the pull command
-var pullCmd = &cobra.Command{
-	Use:   "pull [remote]",
-	Short: "Fetch from and integrate with another repository",
-	Long: `Incorporate changes from a remote repository into the current branch.
+	cmd := &cobra.Command{
+		Use:   "pull [remote]",
+		Short: "Fetch from and integrate with another repository",
+		Long: `Incorporate changes from a remote repository into the current branch.
 If remote is not specified, the remote named origin is used.`,
-	Args: cobra.MaximumNArgs(1),
-	RunE: gitPull,
+		Args: cobra.MaximumNArgs(1),
+		RunE: pullCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-func gitPull(cmd *cobra.Command, args []string) error {
+func pullCmd(cmd *cobra.Command, args []string) error {
 	_, r, err := openRepo()
 	if err != nil {
 		return err

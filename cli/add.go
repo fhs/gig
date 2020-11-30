@@ -11,18 +11,16 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(addCmd)
+	cmd := &cobra.Command{
+		Use:   "add file ...",
+		Short: "Add file contents to the index",
+		Long:  ``,
+		RunE:  addCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// addCmd represents the add command
-var addCmd = &cobra.Command{
-	Use:   "add file ...",
-	Short: "Add file contents to the index",
-	Long:  ``,
-	RunE:  gitAdd,
-}
-
-func gitAdd(_ *cobra.Command, args []string) error {
+func addCmd(_ *cobra.Command, args []string) error {
 	if len(args) == 0 {
 		fmt.Printf("Nothing specified, nothing added.")
 		return nil

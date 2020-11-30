@@ -10,19 +10,17 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(fetchCmd)
+	cmd := &cobra.Command{
+		Use:   "fetch [remote]",
+		Short: "Download objects and refs from another repository",
+		Long:  `If remote is not specified, the remote named origin is used.`,
+		Args:  cobra.MaximumNArgs(1),
+		RunE:  fetchCmd,
+	}
+	rootCmd.AddCommand(cmd)
 }
 
-// fetchCmd represents the fetch command
-var fetchCmd = &cobra.Command{
-	Use:   "fetch [remote]",
-	Short: "Download objects and refs from another repository",
-	Long:  `If remote is not specified, the remote named origin is used.`,
-	Args:  cobra.MaximumNArgs(1),
-	RunE:  gitFetch,
-}
-
-func gitFetch(cmd *cobra.Command, args []string) error {
+func fetchCmd(cmd *cobra.Command, args []string) error {
 	_, r, err := openRepo()
 	if err != nil {
 		return err
