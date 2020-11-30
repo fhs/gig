@@ -6,10 +6,7 @@ package cli
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 
-	"github.com/go-git/go-git/v5/plumbing/format/index"
 	"github.com/spf13/cobra"
 )
 
@@ -31,19 +28,12 @@ type LsFilesCmd struct {
 }
 
 func (lfc *LsFilesCmd) run(_ *cobra.Command, args []string) error {
-	root, err := findRepoRoot()
+	_, r, err := openRepo()
 	if err != nil {
 		return err
 	}
-	f, err := os.Open(filepath.Join(root, ".git", "index"))
+	idx, err := r.Storer.Index()
 	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	var idx index.Index
-	dec := index.NewDecoder(f)
-	if err := dec.Decode(&idx); err != nil {
 		return err
 	}
 	for _, e := range idx.Entries {
