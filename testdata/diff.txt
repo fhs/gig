@@ -1,13 +1,17 @@
 gig init repo
 cd repo
-gig add a.txt b.txt
+gig add a.txt b.txt c.txt
 gig commit -m 'Initial commit'
 
 cp ../a2.txt a.txt
-rm b.txt
+rm b.txt c.txt
+gig add c.txt
 
 gig diff
-cmp stdout ../output.txt
+cmp stdout ../index-diff.txt
+
+gig diff HEAD
+cmp stdout ../head-diff.txt
 
 -- repo/a.txt --
 one
@@ -17,10 +21,14 @@ three
 eins
 zwei
 drei
+-- repo/c.txt --
+un
+deux
+trois
 -- a2.txt --
 one
 three
--- output.txt --
+-- index-diff.txt --
 diff --git a/a.txt b/a.txt
 @@ -1,3 +1,2 @@
  one
@@ -31,3 +39,19 @@ diff --git a/b.txt b/b.txt
 -eins
 -zwei
 -drei
+-- head-diff.txt --
+diff --git a/a.txt b/a.txt
+@@ -1,3 +1,2 @@
+ one
+-two
+ three
+diff --git a/b.txt b/b.txt
+@@ -1,3 +0,0 @@
+-eins
+-zwei
+-drei
+diff --git a/c.txt b/c.txt
+@@ -1,3 +0,0 @@
+-un
+-deux
+-trois

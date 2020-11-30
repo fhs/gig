@@ -5,14 +5,17 @@
 package cli
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 
+	git "github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/filemode"
 	fdiff "github.com/go-git/go-git/v5/plumbing/format/diff"
+	"github.com/go-git/go-git/v5/plumbing/format/index"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/utils/diff"
 	"github.com/sergi/go-diff/diffmatchpatch"
@@ -21,11 +24,14 @@ import (
 
 func init() {
 	cmd := &cobra.Command{
-		Use:     "diff",
+		Use:     "diff [commit]",
 		Aliases: []string{"di"},
-		Short:   "Show changes between commits",
-		Long:    ``,
-		RunE:    diffCmd,
+		Short:   "Show changes between working tree, index, commits, etc.",
+		Long: `If a commit argument is given, compare working tree with that commit.
+Otherwise, compare working tree with the index (staging area for the
+next commit).`,
+		Args: cobra.MaximumNArgs(1),
+		RunE: diffCmd,
 	}
 	rootCmd.AddCommand(cmd)
 }
@@ -35,16 +41,32 @@ func diffCmd(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	ref, err := r.Head()
+
+	if len(args) == 1 {
+		return diffWithCommit(os.Stdout, r, root, plumbing.Revision(args[0]))
+	}
+	return diffWithIndex(os.Stdout, r, root)
+}
+
+func diffWithIndex(w io.Writer, r *git.Repository, root string) error {
+	idx, err := r.Storer.Index()
 	if err != nil {
-		if err.Error() == "reference not found" {
-			// No diff if there is no commits yet.
-			return nil
-		}
 		return err
 	}
-	h := ref.Hash()
-	commit, err := r.CommitObject(h)
+	iter := &indexEntriesIter{
+		idx: idx,
+		r:   r,
+		k:   0,
+	}
+	return worktreeDiff(w, iter, root)
+}
+
+func diffWithCommit(w io.Writer, r *git.Repository, root string, rev plumbing.Revision) error {
+	hash, err := r.ResolveRevision(rev)
+	if err != nil {
+		return err
+	}
+	commit, err := r.CommitObject(*hash)
 	if err != nil {
 		return err
 	}
@@ -52,13 +74,37 @@ func diffCmd(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	// TODO: We need to compare worktree with staging instead of HEAD.
-	return worktreeDiff(os.Stdout, tree, root)
+	return worktreeDiff(w, tree.Files(), root)
 }
 
-func worktreeDiff(w io.Writer, from *object.Tree, root string) error {
-	iter := from.Files()
-	defer iter.Close()
+type fileIter interface {
+	Next() (*object.File, error)
+}
+
+type indexEntriesIter struct {
+	idx *index.Index
+	r   *git.Repository
+	k   int
+}
+
+func (i *indexEntriesIter) Next() (*object.File, error) {
+	entries := i.idx.Entries
+	if i.k >= len(entries) {
+		return nil, io.EOF
+	}
+	if i.k < 0 {
+		return nil, fmt.Errorf("index %v out of range", i.k)
+	}
+	e := entries[i.k]
+	b, err := i.r.BlobObject(e.Hash)
+	if err != nil {
+		return nil, err
+	}
+	i.k++
+	return object.NewFile(e.Name, e.Mode, b), nil
+}
+
+func worktreeDiff(w io.Writer, iter fileIter, root string) error {
 	var filePatches []fdiff.FilePatch
 	for {
 		file, err := iter.Next()
