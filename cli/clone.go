@@ -26,10 +26,15 @@ func cloneCmd(_ *cobra.Command, args []string) error {
 	if len(args) < 2 {
 		return fmt.Errorf("usage: gig clone <url> <dir>")
 	}
+	auth, err := endpointAuth(args[0])
+	if err != nil {
+		return err
+	}
 	// Clone the given repository to the given directory
-	_, err := git.PlainClone(args[1], false, &git.CloneOptions{
+	_, err = git.PlainClone(args[1], false, &git.CloneOptions{
 		URL:      args[0],
 		Progress: os.Stdout,
+		Auth:     auth,
 	})
 	return err
 }
