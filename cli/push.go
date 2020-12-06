@@ -51,9 +51,14 @@ func pushCmd(cmd *cobra.Command, args []string) error {
 			config.RefSpec(head.Name() + ":" + head.Name()),
 		}
 	}
+	auth, err := remoteAuth(r, remote)
+	if err != nil {
+		return err
+	}
 	err = r.Push(&git.PushOptions{
 		RemoteName: remote,
 		RefSpecs:   refspecs,
+		Auth:       auth,
 	})
 	if err == git.NoErrAlreadyUpToDate {
 		fmt.Printf("%v\n", err)

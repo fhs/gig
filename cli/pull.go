@@ -5,6 +5,8 @@
 package cli
 
 import (
+	"fmt"
+
 	git "github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
 )
@@ -35,7 +37,17 @@ func pullCmd(cmd *cobra.Command, args []string) error {
 	if len(args) >= 1 {
 		remote = args[0]
 	}
-	return w.Pull(&git.PullOptions{
+	auth, err := remoteAuth(r, remote)
+	if err != nil {
+		return err
+	}
+	err = w.Pull(&git.PullOptions{
 		RemoteName: remote,
+		Auth:       auth,
 	})
+	if err == git.NoErrAlreadyUpToDate {
+		fmt.Printf("%v\n", err)
+		return nil
+	}
+	return err
 }

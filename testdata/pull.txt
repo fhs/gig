@@ -24,8 +24,8 @@ gig pull
 gig log
 stdout 'second commit'
 
-! gig pull origin
-stderr 'already up-to-date'
+gig pull origin
+stdout 'already up-to-date'
 
 -- one/hello.txt --
 hello world

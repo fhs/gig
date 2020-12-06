@@ -13,5 +13,8 @@ gig fetch origin
 gig show origin/master
 stdout 'Initial commit'
 
+gig fetch origin
+stdout 'already up-to-date'
+
 -- one/hello.txt --
 hello world

@@ -19,11 +19,24 @@ import (
 	"strings"
 
 	"github.com/fhs/go-plan9-auth/auth"
+	git "github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport"
 	tssh "github.com/go-git/go-git/v5/plumbing/transport/ssh"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/knownhosts"
 )
+
+func remoteAuth(r *git.Repository, remote string) (transport.AuthMethod, error) {
+	rem, err := r.Remote(remote)
+	if err != nil {
+		return nil, err
+	}
+	cfg := rem.Config()
+	if len(cfg.URLs) == 0 {
+		return nil, fmt.Errorf("not URLs in remote %v", remote)
+	}
+	return endpointAuth(cfg.URLs[0])
+}
 
 func endpointAuth(url string) (transport.AuthMethod, error) {
 	t, err := transport.NewEndpoint(url)
