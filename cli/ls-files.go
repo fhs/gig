@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	var lfc LsFilesCmd
+	var lfc lsFilesCmd
 
 	cmd := &cobra.Command{
 		Use:   "ls-files",
@@ -23,11 +23,11 @@ func init() {
 	cmd.Flags().BoolVarP(&lfc.stage, "stage", "s", false, "Show staged contents' mode bits, object name and stage number")
 }
 
-type LsFilesCmd struct {
+type lsFilesCmd struct {
 	stage bool
 }
 
-func (lfc *LsFilesCmd) run(_ *cobra.Command, args []string) error {
+func (lfc *lsFilesCmd) run(_ *cobra.Command, args []string) error {
 	_, r, err := openRepo()
 	if err != nil {
 		return err
