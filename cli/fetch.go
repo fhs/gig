@@ -38,6 +38,7 @@ func fetchCmd(cmd *cobra.Command, args []string) error {
 	err = r.Fetch(&git.FetchOptions{
 		RemoteName: remote,
 		Auth:       auth,
+		Progress:   progressWriter,
 	})
 	if err == git.NoErrAlreadyUpToDate {
 		fmt.Printf("%v\n", err)

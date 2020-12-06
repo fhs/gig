@@ -198,3 +198,18 @@ func (s *rsaSigner) Sign(rand io.Reader, data []byte) (*ssh.Signature, error) {
 		Blob:   blob,
 	}, nil
 }
+
+var progressWriter = plan9Progress{}
+
+type plan9Progress struct{}
+
+func (p plan9Progress) Write(data []byte) (int, error) {
+	if os.Getenv("TERM") == "" { // not vt(1)
+		for i, b := range data {
+			if b == '\r' {
+				data[i] = '\n'
+			}
+		}
+	}
+	return os.Stdout.Write(data)
+}

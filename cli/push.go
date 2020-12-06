@@ -59,6 +59,7 @@ func pushCmd(cmd *cobra.Command, args []string) error {
 		RemoteName: remote,
 		RefSpecs:   refspecs,
 		Auth:       auth,
+		Progress:   progressWriter,
 	})
 	if err == git.NoErrAlreadyUpToDate {
 		fmt.Printf("%v\n", err)

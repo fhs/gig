@@ -6,7 +6,6 @@ package cli
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
@@ -33,8 +32,8 @@ func cloneCmd(_ *cobra.Command, args []string) error {
 	// Clone the given repository to the given directory
 	_, err = git.PlainClone(args[1], false, &git.CloneOptions{
 		URL:      args[0],
-		Progress: os.Stdout,
 		Auth:     auth,
+		Progress: progressWriter,
 	})
 	return err
 }
