@@ -35,15 +35,15 @@ func remoteAuth(r *git.Repository, remote string) (transport.AuthMethod, error) 
 	if len(cfg.URLs) == 0 {
 		return nil, fmt.Errorf("not URLs in remote %v", remote)
 	}
-	return endpointAuth(cfg.URLs[0])
-}
-
-func endpointAuth(url string) (transport.AuthMethod, error) {
-	t, err := transport.NewEndpoint(url)
+	ep, err := transport.NewEndpoint(cfg.URLs[0])
 	if err != nil {
 		return nil, err
 	}
-	if t.Protocol != "ssh" {
+	return endpointAuth(ep)
+}
+
+func endpointAuth(ep *transport.Endpoint) (transport.AuthMethod, error) {
+	if ep.Protocol != "ssh" {
 		// We only care about ssh auth for now.
 		// In the future, factotum should be used for https also.
 		return nil, nil
@@ -64,7 +64,7 @@ func endpointAuth(url string) (transport.AuthMethod, error) {
 		return nil, err
 	}
 	return &tssh.PublicKeysCallback{
-		User:     t.User,
+		User:     ep.User,
 		Callback: factotumSigners,
 		HostKeyCallbackHelper: tssh.HostKeyCallbackHelper{
 			HostKeyCallback: printUnknownKey(hostKeyCallback),

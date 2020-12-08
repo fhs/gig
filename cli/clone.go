@@ -32,18 +32,19 @@ func cloneCmd(_ *cobra.Command, args []string) error {
 	}
 	url := args[0]
 
+	ep, err := transport.NewEndpoint(url)
+	if err != nil {
+		return err
+	}
+
 	dir := ""
 	if len(args) >= 2 {
 		dir = args[1]
 	} else {
-		ep, err := transport.NewEndpoint(url)
-		if err != nil {
-			return err
-		}
 		dir = cloneDir(ep.Path)
 	}
 
-	auth, err := endpointAuth(url)
+	auth, err := endpointAuth(ep)
 	if err != nil {
 		return err
 	}

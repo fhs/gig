@@ -17,7 +17,7 @@ func remoteAuth(r *git.Repository, remote string) (transport.AuthMethod, error) 
 	return nil, nil // the default one works already
 }
 
-func endpointAuth(url string) (transport.AuthMethod, error) {
+func endpointAuth(ep *transport.Endpoint) (transport.AuthMethod, error) {
 	return nil, nil // the default one works already
 }
 
