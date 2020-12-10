@@ -1,0 +1,17 @@
+gig init
+gig add hello.txt
+gig commit -m 'Initial commit'
+cp v2.txt hello.txt
+gig ci -a -m 'change two to twei'
+
+gig blame hello.txt
+stdout 'zwei'
+
+-- hello.txt --
+one
+two
+three
+-- v2.txt --
+one
+zwei
+three
