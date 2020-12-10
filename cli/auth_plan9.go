@@ -199,16 +199,19 @@ func (s *rsaSigner) Sign(rand io.Reader, data []byte) (*ssh.Signature, error) {
 	}, nil
 }
 
-var progressWriter = plan9Progress{}
-
-type plan9Progress struct{}
-
-func (p plan9Progress) Write(data []byte) (int, error) {
+var progressWriter = func() io.Writer {
 	if os.Getenv("TERM") == "" { // not vt(1)
-		for i, b := range data {
-			if b == '\r' {
-				data[i] = '\n'
-			}
+		return plan9Terminal{}
+	}
+	return os.Stdout
+}
+
+type plan9Terminal struct{}
+
+func (p plan9Terminal) Write(data []byte) (int, error) {
+	for i, b := range data {
+		if b == '\r' {
+			data[i] = '\n'
 		}
 	}
 	return os.Stdout.Write(data)

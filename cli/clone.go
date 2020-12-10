@@ -52,7 +52,7 @@ func cloneCmd(_ *cobra.Command, args []string) error {
 	_, err = git.PlainClone(dir, false, &git.CloneOptions{
 		URL:      url,
 		Auth:     auth,
-		Progress: progressWriter,
+		Progress: progressWriter(),
 	})
 	return err
 }

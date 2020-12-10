@@ -7,6 +7,7 @@
 package cli
 
 import (
+	"io"
 	"os"
 
 	git "github.com/go-git/go-git/v5"
@@ -21,4 +22,6 @@ func endpointAuth(ep *transport.Endpoint) (transport.AuthMethod, error) {
 	return nil, nil // the default one works already
 }
 
-var progressWriter = os.Stdout
+var progressWriter = func() io.Writer {
+	return os.Stdout
+}
