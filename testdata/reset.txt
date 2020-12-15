@@ -1,0 +1,21 @@
+gig init
+gig add fruits.txt
+gig commit -m 'Initial commit'
+
+! gig reset --hard --soft
+stderr 'exactly one mode should be specified, not 2'
+
+cp fruits1.txt fruits.txt
+rm fruits1.txt
+
+gig status
+stdout 'fruits.txt'
+gig reset --hard
+gig status
+! stdout '.'
+
+-- fruits.txt --
+apple
+-- fruits1.txt --
+apple
+orange
