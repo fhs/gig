@@ -1,0 +1,17 @@
+cd repo
+gig init
+gig add hello.txt
+gig commit -m 'Initial commit'
+cd ..
+
+mkdir subdir
+cd subdir
+! gig clone
+stderr 'no URL provided'
+gig clone $WORK/repo/
+cd repo
+gig log
+stdout 'Initial commit'
+
+-- repo/hello.txt --
+hello world
