@@ -1,0 +1,11 @@
+gig init
+gig add fruits.txt
+gig commit -m 'Initial commit'
+
+gig grep -n apple
+stdout 'fruits.txt:1:apple'
+! stdout 'orange'
+
+-- fruits.txt --
+apple
+orange
