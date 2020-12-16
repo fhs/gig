@@ -7,7 +7,7 @@ cd ..
 gig clone $WORK/repo/ subdir
 cd subdir
 gig ls-remote
-stderr '^From '$WORK'/repo/$'
+stderr '^From .*/repo/$'
 stdout '\tHEAD$'
 stdout '\trefs/heads/master$'
 
