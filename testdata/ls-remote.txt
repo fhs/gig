@@ -1,0 +1,15 @@
+cd repo
+gig init
+gig add hello.txt
+gig commit -m 'Initial commit'
+cd ..
+
+gig clone $WORK/repo/ subdir
+cd subdir
+gig ls-remote
+stderr '^From '$WORK'/repo/$'
+stdout '\tHEAD$'
+stdout '\trefs/heads/master$'
+
+-- repo/hello.txt --
+hello world
