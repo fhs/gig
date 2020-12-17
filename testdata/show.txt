@@ -16,5 +16,16 @@ stdout 'Initial commit'
 gig show v1.2.3
 stdout 'Initial commit'
 
+gig show HEAD:hello.txt
+cmp stdout hello.txt
+gig show HEAD:./hello.txt
+cmp stdout hello.txt
+mkdir a
+cd a
+gig show HEAD:../hello.txt
+cmp stdout ../hello.txt
+cd ../
+rm a
+
 -- hello.txt --
 hello world
