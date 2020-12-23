@@ -11,8 +11,10 @@ import (
 
 	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing/cache"
 	"github.com/go-git/go-git/v5/storage/filesystem"
+	"github.com/imdario/mergo"
 )
 
 func findRepoRoot() (string, error) {
@@ -72,4 +74,44 @@ func repoRelPath(root, filename string) (string, error) {
 		return "", err
 	}
 	return filepath.Rel(root, filename)
+}
+
+// loadRepoConfig loads repostory configuration file (.git/config),
+// falling back to user config file at UserConfigDir/gig/config for empty values.
+//
+// Note: we don't use git config file at HOME/.gitconfig, unlike go-git's
+// global-scoped config file loader.
+func loadRepoConfig(r *git.Repository) (*config.Config, error) {
+	cfg, err := r.Storer.Config()
+	if err != nil {
+		return nil, err
+	}
+
+	dir, err := gigConfigDir()
+	if err != nil {
+		return nil, err
+	}
+	f, err := os.Open(filepath.Join(dir, "config"))
+	if err != nil {
+		if os.IsNotExist(err) {
+			return cfg, nil
+		}
+		return nil, err
+	}
+	defer f.Close()
+	global, err := config.ReadConfig(f)
+	if err != nil {
+		return nil, err
+	}
+
+	_ = mergo.Merge(cfg, global)
+	return cfg, nil
+}
+
+func gigConfigDir() (string, error) {
+	dir, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(dir, "gig"), nil
 }

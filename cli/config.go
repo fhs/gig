@@ -7,7 +7,6 @@ package cli
 import (
 	"fmt"
 
-	"github.com/go-git/go-git/v5/config"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +35,7 @@ func (cc *configCmd) run(_ *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	cfg, err := r.ConfigScoped(config.GlobalScope)
+	cfg, err := loadRepoConfig(r)
 	if err != nil {
 		return err
 	}

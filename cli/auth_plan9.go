@@ -77,12 +77,12 @@ func getDefaultKnownHostsFiles() ([]string, error) {
 	if len(files) != 0 {
 		return files, nil
 	}
-	home, err := os.UserHomeDir()
+	dir, err := gigConfigDir()
 	if err != nil {
 		return nil, err
 	}
 	return []string{
-		filepath.Join(home, "lib", "ssh", "known_hosts"),
+		filepath.Join(dir, "known_hosts"),
 	}, nil
 }
 

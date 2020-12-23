@@ -16,7 +16,6 @@ import (
 	"time"
 
 	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/spf13/cobra"
 )
@@ -72,7 +71,7 @@ func (cc *commitCmd) run(_ *cobra.Command, args []string) error {
 	name := os.Getenv("GIT_AUTHOR_NAME")
 	email := os.Getenv("GIT_AUTHOR_EMAIL")
 	if name == "" || email == "" {
-		cfg, err := r.ConfigScoped(config.GlobalScope)
+		cfg, err := loadRepoConfig(r)
 		if err != nil {
 			return err
 		}
