@@ -18,8 +18,9 @@ GO111MODULE=on go get github.com/fhs/gig/cmd/gig
 ## Testing on Plan 9
 
 To run tests on Plan 9, you need to first run this first:
-	go mod edit -replace 'github.com/rogpeppe/go-internal@v1.6.2=github.com/fhs/go-internal@v1.6.3-0.20201122174144-815d671f4ff9'
-
+```
+go mod edit -replace 'github.com/rogpeppe/go-internal@v1.6.2=github.com/fhs/go-internal@v1.6.3-0.20201122174144-815d671f4ff9'
+```
 This is due to https://github.com/rogpeppe/go-internal/pull/115.
 
 ## See also
