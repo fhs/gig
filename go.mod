@@ -3,8 +3,7 @@ module github.com/fhs/gig
 go 1.14
 
 require (
-	github.com/alcortesm/tgz v0.0.0-20161220082320-9c5fe88206d7 // indirect
-	github.com/fhs/go-plan9-auth v0.2.0
+	github.com/fhs/go-plan9-auth v0.3.0
 	github.com/go-git/go-billy/v5 v5.3.1
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/imdario/mergo v0.3.12
