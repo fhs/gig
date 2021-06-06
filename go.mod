@@ -12,5 +12,3 @@ require (
 	github.com/spf13/cobra v1.1.1
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
 )
-
-replace github.com/rogpeppe/go-internal v1.6.2 => github.com/fhs/go-internal v1.6.3-0.20201122174144-815d671f4ff9
