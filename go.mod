@@ -9,6 +9,6 @@ require (
 	github.com/imdario/mergo v0.3.12
 	github.com/rogpeppe/go-internal v1.6.2
 	github.com/sergi/go-diff v1.1.0
-	github.com/spf13/cobra v1.1.1
+	github.com/spf13/cobra v1.4.0
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
 )
