@@ -10,5 +10,5 @@ require (
 	github.com/rogpeppe/go-internal v1.10.0
 	github.com/sergi/go-diff v1.1.0
 	github.com/spf13/cobra v1.1.1
-	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
+	golang.org/x/crypto v0.1.0
 )
