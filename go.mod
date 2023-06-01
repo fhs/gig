@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/fhs/go-plan9-auth v0.3.0
-	github.com/go-git/go-billy/v5 v5.3.1
+	github.com/go-git/go-billy/v5 v5.4.1
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/imdario/mergo v0.3.12
 	github.com/rogpeppe/go-internal v1.10.0
