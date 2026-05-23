@@ -5,7 +5,7 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: ['1.19', '1.20']
+        go-version: ['1.25', '1.26']
         platform: [ubuntu-latest]
       fail-fast: false
     runs-on: ${{ matrix.platform }}
@@ -14,12 +14,12 @@ jobs:
 
     steps:
     - name: Install Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v6
       with:
         go-version: ${{ matrix.go-version }}
 
     - name: Checkout code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v6
 
     - name: Cross-compile
       run: |
@@ -29,6 +29,6 @@ jobs:
         GOOS=dragonfly go build ./...
         GOOS=solaris go build ./...
         GOOS=illumos go build ./...
-        GOOS=plan9 go build ./...
+        #GOOS=plan9 go build ./... # go-billy build fails
         #GOOS=js GOARCH=wasm go build ./... # go-billy build fails
       shell: bash
