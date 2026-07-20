@@ -10,7 +10,7 @@ require (
 	github.com/rogpeppe/go-internal v1.14.1
 	github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3
 	github.com/spf13/cobra v1.1.1
-	golang.org/x/crypto v0.50.0
+	golang.org/x/crypto v0.54.0
 )
 
 require (
@@ -176,16 +176,16 @@ require (
 	golang.org/x/image v0.0.0-20190802002840-cff245a6509b // indirect
 	golang.org/x/lint v0.0.0-20190930215403-16217165b5de // indirect
 	golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028 // indirect
-	golang.org/x/mod v0.35.0 // indirect
-	golang.org/x/net v0.53.0 // indirect
+	golang.org/x/mod v0.37.0 // indirect
+	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45 // indirect
-	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/sys v0.43.0 // indirect
-	golang.org/x/telemetry v0.0.0-20260409153401-be6f6cb8b1fa // indirect
-	golang.org/x/term v0.42.0 // indirect
-	golang.org/x/text v0.36.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/telemetry v0.0.0-20260625142307-59b4966ccb57 // indirect
+	golang.org/x/term v0.45.0 // indirect
+	golang.org/x/text v0.40.0 // indirect
 	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4 // indirect
-	golang.org/x/tools v0.44.0 // indirect
+	golang.org/x/tools v0.47.0 // indirect
 	golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7 // indirect
 	google.golang.org/api v0.13.0 // indirect
 	google.golang.org/appengine v1.6.1 // indirect
